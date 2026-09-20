@@ -91,6 +91,7 @@ export const BaseProviders = [
 	'boltiot',
 	'bonsai',
 	'bookingmood',
+	'borneo',
 	'botbaba',
 	'botpress',
 	'botsonic',
@@ -287,6 +288,7 @@ export const BaseProviders = [
 	'webvizio',
 	'whatsapp',
 	'witai',
+	'wix',
 	'wiza',
 	'workday',
 	'workiom',
@@ -380,6 +382,7 @@ export const ProviderDisplayNames = {
 	boltiot: 'Bolt IoT',
 	bonsai: 'Bonsai',
 	bookingmood: 'Bookingmood',
+	borneo: 'Borneo',
 	botbaba: 'Botbaba',
 	botpress: 'Botpress',
 	botsonic: 'Botsonic',
@@ -576,6 +579,7 @@ export const ProviderDisplayNames = {
 	webvizio: 'Webvizio',
 	whatsapp: 'WhatsApp',
 	witai: 'WitAi',
+	wix: 'Wix',
 	wiza: 'Wiza',
 	workday: 'Workday',
 	workiom: 'Workiom',
@@ -676,6 +680,7 @@ export type AllProviders =
 	| 'boltiot'
 	| 'bonsai'
 	| 'bookingmood'
+	| 'borneo'
 	| 'botbaba'
 	| 'botpress'
 	| 'botsonic'
@@ -872,6 +877,7 @@ export type AllProviders =
 	| 'webvizio'
 	| 'whatsapp'
 	| 'witai'
+	| 'wix'
 	| 'wiza'
 	| 'workday'
 	| 'workiom'
