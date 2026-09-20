@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
-// TODO: Define your database entities here
-// export const TinypngExample = z.object({
-// 	id: z.string(),
-// 	name: z.string(),
-// 	created_at: z.coerce.date().nullable().optional(),
-// });
-// export type TinypngExample = z.infer<typeof TinypngExample>;
+// TinyPNG is a stateless image-compression API with no local persistence.
+export const TinypngEntities = z.object({});
+
+export type TinypngEntities = z.infer<typeof TinypngEntities>;

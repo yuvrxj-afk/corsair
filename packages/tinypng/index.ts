@@ -12,6 +12,7 @@ import type {
 	RequiredPluginEndpointMeta,
 	RequiredPluginEndpointSchemas,
 } from 'corsair/core';
+import { AuthMissingError } from 'corsair/core';
 import { Image } from './endpoints';
 import type {
 	TinypngEndpointInputs,
@@ -173,21 +174,16 @@ export function tinypng<const T extends TinypngPluginOptions>(
 		},
 
 		keyBuilder: async (ctx: TinypngKeyBuilderContext, source) => {
-			/*
-			 * Use the explicitly supplied API key first.
-			 */
 			if (source === 'endpoint' && options.key) {
 				return options.key;
 			}
 
-			/*
-			 * Otherwise retrieve the API key
-			 * from the Corsair key system.
-			 */
 			if (source === 'endpoint' && ctx.authType === 'api_key') {
 				const key = await ctx.keys.get_api_key();
-
-				return key ?? '';
+				if (!key) {
+					throw new AuthMissingError('tinypng', 'api_key');
+				}
+				return key;
 			}
 
 			return '';

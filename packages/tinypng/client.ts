@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export class TinypngAPIError extends Error {
 	constructor(
 		message: string,
@@ -10,20 +12,24 @@ export class TinypngAPIError extends Error {
 
 const TINYPNG_API_BASE = 'https://api.tinify.com';
 
-type TinypngResult = {
-	output: {
-		size: number;
-		type: string;
-		width: number;
-		height: number;
-		url: string;
-	};
-};
+const TinypngOutputSchema = z.object({
+	size: z.number(),
+	type: z.string(),
+	width: z.number(),
+	height: z.number(),
+	url: z.string().url(),
+});
+
+const TinypngResultSchema = z.object({
+	output: TinypngOutputSchema,
+});
+
+export type TinypngOutput = z.infer<typeof TinypngOutputSchema>;
 
 export async function compressImageFromUrl(
 	imageUrl: string,
 	apiKey: string,
-): Promise<TinypngResult['output']> {
+): Promise<TinypngOutput> {
 	const credentials = Buffer.from(`api:${apiKey}`).toString('base64');
 
 	const response = await fetch(`${TINYPNG_API_BASE}/shrink`, {
@@ -41,7 +47,17 @@ export async function compressImageFromUrl(
 		}),
 	});
 
-	const data: unknown = await response.json();
+	const text = await response.text();
+	let data: unknown;
+
+	try {
+		data = JSON.parse(text);
+	} catch {
+		throw new TinypngAPIError(
+			'TinyPNG API returned invalid JSON',
+			response.status,
+		);
+	}
 
 	if (!response.ok) {
 		const errorData = data as {
@@ -54,7 +70,13 @@ export async function compressImageFromUrl(
 		);
 	}
 
-	const successData = data as TinypngResult;
+	const parsed = TinypngResultSchema.safeParse(data);
+	if (!parsed.success) {
+		throw new TinypngAPIError(
+			'TinyPNG API returned an unexpected response format',
+			response.status,
+		);
+	}
 
-	return successData.output;
+	return parsed.data.output;
 }
